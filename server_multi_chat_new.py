@@ -3,11 +3,12 @@ import os
 from _thread import *
 
 ServerSocket = socket.socket()
-host = '127.0.0.1'
-port = 1243
-ThreadCount = 0s
+host = '192.168.10.109'
+port = 1247
+ThreadCount = 0
 
 clients={}
+new_clients={}
 
 try:
     ServerSocket.bind((host, port))
@@ -19,7 +20,7 @@ ServerSocket.listen(5)
 
 
 def threaded_client(connection,address):
-	clients[address[1]]=connection
+	new_clients[address[1]]=connection
 	while True:
 		data = connection.recv(2048).decode()
 		data=str(data)
@@ -28,11 +29,13 @@ def threaded_client(connection,address):
 		print(data)
 		try:
 			client,msg=data.split(":")
+			if client=="name":
+				clients[msg]=new_clients[address[1]]
 			if  msg=="quit":
 				break
-			if int(client) in clients:
+			if client in clients:
 				print("sending to",client)
-				clients[int(client)].sendall(str.encode(msg))
+				clients[client].sendall(str.encode(msg))
 		except Exception as e:
 			print("exp",e)
 	connection.close()
