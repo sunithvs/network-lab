@@ -1,15 +1,19 @@
 import socket
 
-HOST ='127.0.0.1'
-PORT=1243
+HOST ='192.168.10.109'
+PORT=1247
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 s.connect((HOST,PORT))
 s.sendall(b"connect")
+recv = input("Enter your name")
+text="name"+":"+recv.strip().lower()
+s.sendall(bytes(text, 'utf-8'))
 
 while True:
-	recv = input("Enter recv")
+	
+	recv = input("Enter sender'S name")
 	if recv=="exit":
 		break
 	while True:
